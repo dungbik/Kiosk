@@ -1,7 +1,7 @@
 package com.example.service;
 
-import com.example.vo.CartItem;
-import com.example.vo.MenuItem;
+import com.example.domain.CartItem;
+import com.example.domain.MenuItem;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;

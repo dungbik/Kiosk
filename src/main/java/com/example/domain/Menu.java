@@ -1,4 +1,4 @@
-package com.example.vo;
+package com.example.domain;
 
 import com.example.constant.Category;
 

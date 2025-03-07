@@ -2,13 +2,14 @@ package com.example;
 
 import com.example.constant.Category;
 import com.example.service.Kiosk;
-import com.example.vo.Menu;
-import com.example.vo.MenuItem;
+import com.example.domain.Menu;
+import com.example.domain.MenuItem;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
+
     public static void main(String[] args) {
         List<Menu> menus = new ArrayList<>();
 

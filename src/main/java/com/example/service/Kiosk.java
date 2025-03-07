@@ -1,11 +1,11 @@
 package com.example.service;
 
 import com.example.constant.BenefitType;
-import com.example.vo.CartItem;
 import com.example.constant.Category;
 import com.example.constant.Stage;
-import com.example.vo.Menu;
-import com.example.vo.MenuItem;
+import com.example.domain.CartItem;
+import com.example.domain.Menu;
+import com.example.domain.MenuItem;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,7 +22,6 @@ public class Kiosk {
     private Category selectedCategory = null;
     private MenuItem selectedMenuItem = null;
     private BenefitType selectedBenefitType = null;
-
 
     public Kiosk(List<Menu> menus) {
         this.menus = menus;
