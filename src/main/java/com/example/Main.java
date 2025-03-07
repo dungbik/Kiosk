@@ -15,6 +15,11 @@ public class Main {
         kiosk.start();
     }
 
+    /**
+     * 미리 정의된 메뉴와 카테고리별 메뉴 항목의 목록을 생성하고 반환합니다.
+     *
+     * @return 각 카테고리가 포함된 Menu 객체와 관련된 MenuItems 의 목록을 반환합니다.
+     */
     public static List<Menu> getMenus() {
         List<Menu> menus = new ArrayList<>();
 
