@@ -1,6 +1,7 @@
-package com.example;
+package com.example.vo;
 
 public record MenuItem(
+        int id,
         String name,
         double price,
         String description
