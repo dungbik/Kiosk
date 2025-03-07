@@ -5,7 +5,7 @@ import com.example.constant.Category;
 import java.util.List;
 
 public record Menu(
-        Category burger,
+        Category category,
         List<MenuItem> menuItems
 ) {
 }
