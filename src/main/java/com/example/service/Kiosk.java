@@ -1,5 +1,6 @@
 package com.example.service;
 
+import com.example.constant.BenefitType;
 import com.example.vo.CartItem;
 import com.example.constant.Category;
 import com.example.constant.Stage;
@@ -20,6 +21,7 @@ public class Kiosk {
     private Stage curStage = Stage.SELECT_CATEGORY;
     private Category selectedCategory = null;
     private MenuItem selectedMenuItem = null;
+    private BenefitType selectedBenefitType = null;
 
 
     public Kiosk(List<Menu> menus) {
@@ -34,9 +36,10 @@ public class Kiosk {
                 case CONFIRM_ADD_TO_CART -> confirmAddToCart();
                 case ADD_TO_CART -> addToCart();
                 case CONFIRM_ORDER -> confirmOrder();
-                case ORDER -> order();
                 case CANCEL_ORDER -> cancelOrder();
                 case REMOVE_CART_ITEM -> removeCartItem();
+                case SELECT_BENEFIT -> selectBenefit();
+                case ORDER -> order();
             }
         }
     }
@@ -164,11 +167,13 @@ public class Kiosk {
             try {
                 int command = sc.nextInt();
                 if (command == 1) {
-                    curStage = Stage.ORDER;
+                    curStage = Stage.SELECT_BENEFIT;
                     break;
                 } else if (command == 2) {
                     curStage = Stage.SELECT_CATEGORY;
                     break;
+                } else {
+                    System.out.println("존재하는 명령어를 선택해주세요.");
                 }
             } finally {
                 System.out.println();
@@ -188,7 +193,12 @@ public class Kiosk {
     }
 
     private void order() {
-        System.out.printf("주문이 완료되었습니다. 금액은 W %f 입니다.\n\n", cart.getTotalPrice());
+        double price = cart.getTotalPrice();
+        if (selectedBenefitType != BenefitType.NORMAL) {
+            price = (100 - selectedBenefitType.getDiscountRate()) * price / 100.0D;
+        }
+        System.out.printf("주문이 완료되었습니다. 금액은 W %f 입니다.\n\n", price);
+        selectedBenefitType = null;
         cart.clear();
         curStage = Stage.SELECT_CATEGORY;
     }
@@ -204,37 +214,61 @@ public class Kiosk {
         sc.nextLine();
         System.out.print("장바구니에서 제거할 메뉴의 이름 일부를 입력 : ");
 
+        String keyword = sc.nextLine();
+        List<MenuItem> foundMenuItem = cart.findMenuItemsByName(keyword);
+        System.out.println("[Select Remove Cart Item]");
+        foundMenuItem
+                .forEach(mi -> System.out.printf("%d. %s\n", foundMenuItem.indexOf(mi) + 1, mi));
+        System.out.println("0. 취소");
+
         while (true) {
-            String keyword = sc.nextLine();
-            List<MenuItem> foundMenuItem = cart.findMenuItemsByName(keyword);
-            System.out.println("[Select Remove Cart Item]");
-            foundMenuItem
-                    .forEach(mi -> System.out.printf("%d. %s\n", foundMenuItem.indexOf(mi) + 1, mi));
-            System.out.println("0. 취소");
-
-            while (true) {
-                try {
-                    int command = sc.nextInt();
-                    if (command == 0) {
-                        curStage = Stage.SELECT_CATEGORY;
-                        break;
-                    } else if (command <= foundMenuItem.size()) {
-                        MenuItem selectedMenuItem = foundMenuItem.get(command - 1);
-                        cart.removeCartItem(selectedMenuItem);
-                        System.out.printf("%s 를 장바구니에서 제거하였습니다.", selectedMenuItem.name());
-                        curStage = Stage.SELECT_CATEGORY;
-                        break;
-                    }
-                } catch (Exception e) {
-                    System.out.println("올바른 명령어를 입력해주세요.");
-                } finally {
-                    System.out.println();
+            try {
+                int command = sc.nextInt();
+                if (command == 0) {
+                    curStage = Stage.SELECT_CATEGORY;
+                    break;
+                } else if (command <= foundMenuItem.size()) {
+                    MenuItem selectedMenuItem = foundMenuItem.get(command - 1);
+                    cart.removeCartItem(selectedMenuItem);
+                    System.out.printf("%s 를 장바구니에서 제거하였습니다.", selectedMenuItem.name());
+                    curStage = Stage.SELECT_CATEGORY;
+                    break;
+                } else {
+                    System.out.println("존재하는 명령어를 선택해주세요.");
                 }
+            } catch (Exception e) {
+                System.out.println("올바른 명령어를 입력해주세요.");
+            } finally {
+                System.out.println();
             }
-
-            break;
         }
+    }
 
+    private void selectBenefit() {
+        printSelectBenefit();
+
+        while (true) {
+            try {
+                int command = sc.nextInt();
+                if (command <= BenefitType.values().length) {
+                    selectedBenefitType = BenefitType.parse(command);
+                    curStage = Stage.ORDER;
+                    break;
+                } else {
+                    System.out.println("존재하는 명령어를 선택해주세요.");
+                }
+            } catch (Exception e) {
+                System.out.println("올바른 명령어를 입력해주세요.");
+            } finally {
+                System.out.println();
+            }
+        }
+    }
+
+    private static void printSelectBenefit() {
+        System.out.println("할인 정보를 입력해주세요.");
+        Arrays.stream(BenefitType.values())
+                .forEach(c -> System.out.printf("%d. %-8s: %d%%\n", c.getId(), c.getName(), c.getDiscountRate()));
     }
 
 }
