@@ -284,12 +284,7 @@ public class Kiosk {
      * 모든 일치하는 항목이 표시되며, 사용자는 제거할 항목을 선택하거나 작업을 취소할 수 있습니다.
      */
     private void removeCartItem() {
-        sc.nextLine();
-        System.out.print("장바구니에서 제거할 메뉴의 이름 일부를 입력 : ");
-
-        String keyword = sc.nextLine();
-        List<MenuItem> foundMenuItem = cart.findMenuItemsByName(keyword);
-        System.out.println("[Select Remove Cart Item]");
+        List<MenuItem> foundMenuItem = findMenusItems();
         foundMenuItem
                 .forEach(mi -> System.out.printf("%d. %s\n", foundMenuItem.indexOf(mi) + 1, mi));
         System.out.println("0. 취소");
@@ -315,6 +310,21 @@ public class Kiosk {
                 System.out.println();
             }
         }
+    }
+
+    /**
+     * 사용자가 제공한 키워드를 기반으로 쇼핑 카트에 있는 메뉴 항목의 목록을 찾아서 반환합니다.
+     *
+     * @return 제공된 키워드가 이름에 포함되어 있는 장바구니 내의 메뉴 항목 목록
+     */
+    private List<MenuItem> findMenusItems() {
+        sc.nextLine();
+        System.out.print("장바구니에서 제거할 메뉴의 이름 일부를 입력 : ");
+
+        String keyword = sc.nextLine();
+        List<MenuItem> foundMenuItem = cart.findMenuItemsByName(keyword);
+        System.out.println("[Select Remove Cart Item]");
+        return foundMenuItem;
     }
 
     /**
