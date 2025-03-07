@@ -11,6 +11,11 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) {
+        Kiosk kiosk = new Kiosk(getMenus());
+        kiosk.start();
+    }
+
+    public static List<Menu> getMenus() {
         List<Menu> menus = new ArrayList<>();
 
         menus.add(
@@ -41,7 +46,6 @@ public class Main {
                 ))
         );
 
-        Kiosk kiosk = new Kiosk(menus);
-        kiosk.start();
+        return menus;
     }
 }
