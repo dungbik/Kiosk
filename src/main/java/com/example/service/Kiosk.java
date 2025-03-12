@@ -256,14 +256,23 @@ public class Kiosk {
      * 선택된 할인 혜택 유형을 기반으로 최종 가격을 계산하고, 주문 완료 메시지를 표시하며, 애플리케이션 상태를 재설정합니다.
      */
     private void order() {
-        double price = cart.getTotalPrice();
-        if (selectedBenefitType != BenefitType.NORMAL) {
-            price = (100 - selectedBenefitType.getDiscountRate()) * price / 100.0D;
-        }
-        System.out.printf("주문이 완료되었습니다. 금액은 W %f 입니다.\n\n", price);
+        double discountPrice = applyDiscount(cart.getTotalPrice());
+        System.out.printf("주문이 완료되었습니다. 금액은 W %f 입니다.\n\n", discountPrice);
         selectedBenefitType = null;
         cart.clear();
         curStage = Stage.SELECT_CATEGORY;
+    }
+
+    /**
+     * 선택된 할인 혜택 유형을 기반으로 할인된 가격을 계산하여 반환한다.
+     * @param price 장바구니에 다음 메뉴 가격의 총합
+     * @return 할인이 적용된 최종 가격
+     */
+    private double applyDiscount(double price) {
+        if (selectedBenefitType != BenefitType.NORMAL) {
+            price = (100 - selectedBenefitType.getDiscountRate()) * price / 100.0D;
+        }
+        return price;
     }
 
     /**
